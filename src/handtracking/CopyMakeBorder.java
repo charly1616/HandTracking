@@ -5,19 +5,21 @@ import org.opencv.core.*;
 import org.opencv.highgui.HighGui;
 import org.opencv.imgcodecs.Imgcodecs;
 import java.util.Random;
+import org.opencv.videoio.VideoCapture;
 
 class CopyMakeBorderRun {
 
     public void run(String[] args) {
         // Declare the variables
         Mat src, dst = new Mat();
+        VideoCapture captura = new VideoCapture(0);
         int top, bottom, left, right;
         int borderType = Core.BORDER_CONSTANT;
         String window_name = "copyMakeBorder Demo";
         Random rng;
-        String imageName = ((args.length > 0) ? args[0] : "../data/lena.jpg");
         // Load an image
-        src = Imgcodecs.imread(imageName, Imgcodecs.IMREAD_COLOR);
+        src = new Mat();
+        captura.read(src);
         // Check if image is loaded fine
         if (src.empty()) {
             System.out.println("Error opening image!");
