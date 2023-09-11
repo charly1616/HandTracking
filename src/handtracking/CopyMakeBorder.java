@@ -1,6 +1,7 @@
 
 package handtracking;
 
+import java.awt.Image;
 import org.opencv.core.*;
 import org.opencv.highgui.HighGui;
 import org.opencv.imgcodecs.Imgcodecs;
@@ -61,6 +62,28 @@ class CopyMakeBorderRun {
 }
 
 public class CopyMakeBorder {
+    
+    public static Mat border(Mat src){
+        
+        final int MAX_LOW_THRESHOLD = 100;
+        final int RATIO = 3;
+        final int KERNEL_SIZE = 3;
+        final Size BLUR_SIZE = new Size(3,3);
+        int lowThresh = 0;
+        Mat srcBlur = new Mat();
+        Mat detectedEdges = new Mat();
+        Mat dst = new Mat();
+        Image img = HighGui.toBufferedImage(src);
+        Imgproc.blur(src, srcBlur, BLUR_SIZE);
+        Imgproc.Canny(srcBlur, detectedEdges, lowThresh, lowThresh * RATIO, KERNEL_SIZE, false);
+        dst = new Mat(src.size(), CvType.CV_8UC3, Scalar.all(0));
+        src.copyTo(dst, detectedEdges);
+        return dst;
+    }
+
+    
+
+    
     
     public static Mat Laplace(Mat src){
         Mat src_gray = new Mat(),dst = new Mat();

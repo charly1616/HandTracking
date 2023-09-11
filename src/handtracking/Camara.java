@@ -84,7 +84,8 @@ public class Camara extends JFrame{
             
             captura.read(imagen);
             
-            imagen = CopyMakeBorder.Laplace(imagen);
+            
+            imagen = CopyMakeBorder.border(imagen);
             
             
             //Convertir la matriz en byte
