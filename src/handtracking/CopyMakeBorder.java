@@ -5,10 +5,11 @@ import org.opencv.core.*;
 import org.opencv.highgui.HighGui;
 import org.opencv.imgcodecs.Imgcodecs;
 import java.util.Random;
+import org.opencv.imgproc.Imgproc;
 import org.opencv.videoio.VideoCapture;
 
 class CopyMakeBorderRun {
-
+    
     public void run(String[] args) {
         // Declare the variables
         Mat src, dst = new Mat();
@@ -60,7 +61,24 @@ class CopyMakeBorderRun {
 }
 
 public class CopyMakeBorder {
-
+    
+    public static Mat Laplace(Mat src){
+        Mat src_gray = new Mat(),dst = new Mat();
+        int kernel_size = 3;
+        int scale = 1;
+        int delta = 0;
+        int ddepth = CvType.CV_16S;
+        Imgproc.GaussianBlur( src, src, new Size(3, 3), 0, 0, Core.BORDER_DEFAULT );
+        Imgproc.cvtColor( src, src_gray, Imgproc.COLOR_RGB2GRAY );
+        Mat abs_dst = new Mat();
+        Imgproc.Laplacian( src_gray, dst, ddepth, kernel_size, scale, delta, Core.BORDER_DEFAULT );
+        // converting back to CV_8U
+        Core.convertScaleAbs( dst, abs_dst );
+        return abs_dst;
+    }
+    
+    
+    
     public static void main(String[] args) {
         // Load the native library.
         System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
