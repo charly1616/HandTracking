@@ -82,7 +82,25 @@ public class CopyMakeBorder {
     }
 
     
-
+    public static Mat Rotate(Mat src, double angle) {
+        Point[] srcTri = new Point[3];
+        srcTri[0] = new Point(0, 0);
+        srcTri[1] = new Point(src.cols() - 1, 0);
+        srcTri[2] = new Point(0, src.rows() - 1);
+        Point[] dstTri = new Point[3];
+        dstTri[0] = new Point(0, src.rows() * 0.33);
+        dstTri[1] = new Point(src.cols() * 0.85, src.rows() * 0.25);
+        dstTri[2] = new Point(src.cols() * 0.15, src.rows() * 0.7);
+        Mat warpMat = Imgproc.getAffineTransform(new MatOfPoint2f(srcTri), new MatOfPoint2f(dstTri));
+        Mat warpDst = Mat.zeros(src.rows(), src.cols(), src.type());
+        Imgproc.warpAffine(src, warpDst, warpMat, warpDst.size());
+        Point center = new Point(warpDst.cols() / 2, warpDst.rows() / 2);
+        double scale = 0.6;
+        Mat rotMat = Imgproc.getRotationMatrix2D(center, angle, scale);
+        Mat warpRotateDst = new Mat();
+        Imgproc.warpAffine(warpDst, warpRotateDst, rotMat, warpDst.size());
+        return warpDst;
+    }
     
     
     public static Mat Laplace(Mat src){

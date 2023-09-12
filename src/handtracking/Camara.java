@@ -78,14 +78,16 @@ public class Camara extends JFrame{
         imagen = new Mat();
         byte[] DataImagen;
         
+        double angle = 0;
+        
         ImageIcon icon;
         while (true){
             // leer la imagen
             
             captura.read(imagen);
+            angle += 0.00001;
             
-            
-            imagen = CopyMakeBorder.border(imagen);
+            imagen = CopyMakeBorder.Rotate(imagen, angle);
             
             
             //Convertir la matriz en byte
