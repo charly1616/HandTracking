@@ -8,7 +8,9 @@ import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -17,7 +19,11 @@ import javax.swing.JOptionPane;
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfByte;
+import org.opencv.core.MatOfPoint;
+import org.opencv.core.Scalar;
+import org.opencv.highgui.HighGui;
 import org.opencv.imgcodecs.Imgcodecs;
+import org.opencv.imgproc.Imgproc;
 import org.opencv.videoio.VideoCapture;
 
 public class Camara extends JFrame{
@@ -118,19 +124,72 @@ public class Camara extends JFrame{
     public static void main(String[] args) {
         // Load the native library.
         System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
-        EventQueue.invokeLater(new Runnable(){
-            @Override
-            public void run(){
-                Camara camara = new Camara();
-                
-                new Thread(new Runnable(){
-                    @Override
-                    public void run(){
-                        camara.startCamera();
-                    }
-                }).start();
+        
+        
+        System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
+
+        VideoCapture camera = new VideoCapture(0); // 0 represents the default camera (change if needed)
+        if (!camera.isOpened()) {
+            System.out.println("Camera not found!");
+            return;
+        }
+
+        Mat frame = new Mat();
+        Mat hsvFrame = new Mat();
+        Mat handMask = new Mat();
+        Scalar lowerBound = new Scalar(0, 20, 70);
+        Scalar upperBound = new Scalar(20, 255, 255);
+
+        while (true) {
+            camera.read(frame);
+
+            if (frame.empty()) {
+                System.out.println("End of video");
+                break;
             }
-        });
+
+            Imgproc.cvtColor(frame, hsvFrame, Imgproc.COLOR_BGR2HSV);
+            Core.inRange(hsvFrame, lowerBound, upperBound, handMask);
+
+            // You can perform additional image processing here to refine the hand detection
+
+            // Find contours in the hand mask
+            Mat hierarchy = new Mat();
+            List<MatOfPoint> contours = new ArrayList<>();
+            Imgproc.findContours(handMask, contours, hierarchy, Imgproc.RETR_EXTERNAL, Imgproc.CHAIN_APPROX_SIMPLE);
+
+            // Draw contours on the original frame
+            Imgproc.drawContours(frame, contours, -1, new Scalar(0, 0, 255), 2);
+
+            HighGui.imshow("Hand Detection", frame);
+            if (HighGui.waitKey(10) == 27) {
+                System.out.println("Esc key pressed. Exiting...");
+                break;
+            }
+        }
+
+        camera.release();
+        HighGui.destroyAllWindows();
+    
+        
+        
+        
+        
+        
+        
+//        EventQueue.invokeLater(new Runnable(){
+//            @Override
+//            public void run(){
+//                Camara camara = new Camara();
+//                
+//                new Thread(new Runnable(){
+//                    @Override
+//                    public void run(){
+//                        camara.startCamera();
+//                    }
+//                }).start();
+//            }
+//        });
     }
     
 }
