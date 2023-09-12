@@ -62,13 +62,13 @@ class CopyMakeBorderRun {
 }
 
 public class CopyMakeBorder {
-    
-    public static Mat border(Mat src){
-        
+
+    public static Mat border(Mat src) {
+
         final int MAX_LOW_THRESHOLD = 100;
         final int RATIO = 3;
         final int KERNEL_SIZE = 3;
-        final Size BLUR_SIZE = new Size(3,3);
+        final Size BLUR_SIZE = new Size(3, 3);
         int lowThresh = 0;
         Mat srcBlur = new Mat();
         Mat detectedEdges = new Mat();
@@ -81,7 +81,6 @@ public class CopyMakeBorder {
         return dst;
     }
 
-    
     public static Mat Rotate(Mat src, double angle) {
         Point[] srcTri = new Point[3];
         srcTri[0] = new Point(0, 0);
@@ -101,25 +100,33 @@ public class CopyMakeBorder {
         Imgproc.warpAffine(warpDst, warpRotateDst, rotMat, warpDst.size());
         return warpDst;
     }
-    
-    
-    public static Mat Laplace(Mat src){
-        Mat src_gray = new Mat(),dst = new Mat();
+
+    public static Mat Laplace(Mat src) {
+        Mat src_gray = new Mat(), dst = new Mat();
         int kernel_size = 3;
         int scale = 1;
         int delta = 0;
         int ddepth = CvType.CV_16S;
-        Imgproc.GaussianBlur( src, src, new Size(3, 3), 0, 0, Core.BORDER_DEFAULT );
-        Imgproc.cvtColor( src, src_gray, Imgproc.COLOR_RGB2GRAY );
+        Imgproc.GaussianBlur(src, src, new Size(3, 3), 0, 0, Core.BORDER_DEFAULT);
+        Imgproc.cvtColor(src, src_gray, Imgproc.COLOR_RGB2GRAY);
         Mat abs_dst = new Mat();
-        Imgproc.Laplacian( src_gray, dst, ddepth, kernel_size, scale, delta, Core.BORDER_DEFAULT );
+        Imgproc.Laplacian(src_gray, dst, ddepth, kernel_size, scale, delta, Core.BORDER_DEFAULT);
         // converting back to CV_8U
-        Core.convertScaleAbs( dst, abs_dst );
+        Core.convertScaleAbs(dst, abs_dst);
         return abs_dst;
     }
-    
-    
-    
+
+    public static Mat voltear(Mat src) {
+        Mat dst = new Mat();
+        for (int i = 0; i < src.cols(); i++) {
+            for (int j = 0; j < src.rows(); j++) {
+                dst.put(j, i, src.get(j, i));
+            }
+        }
+        return dst;
+    }
+
+ 
     public static void main(String[] args) {
         // Load the native library.
         System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
