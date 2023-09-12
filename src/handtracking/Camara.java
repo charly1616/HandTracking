@@ -78,7 +78,7 @@ public class Camara extends JFrame{
         imagen = new Mat();
         byte[] DataImagen;
         
-        double angle = 1;
+        
         
         ImageIcon icon;
         while (true){
@@ -88,7 +88,7 @@ public class Camara extends JFrame{
             
             
             
-            imagen = CopyMakeBorder.Laplace(imagen);
+            imagen = imagen;
             
             
             //Convertir la matriz en byte
