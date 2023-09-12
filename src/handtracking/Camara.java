@@ -85,7 +85,6 @@ public class Camara extends JFrame{
         byte[] DataImagen;
         
         
-        
         ImageIcon icon;
         while (true){
             // leer la imagen
@@ -94,8 +93,7 @@ public class Camara extends JFrame{
             
             
             
-            imagen = imagen;
-            
+            imagen = CopyMakeBorder.voltear(imagen);
             
             //Convertir la matriz en byte
             final MatOfByte but = new MatOfByte();
